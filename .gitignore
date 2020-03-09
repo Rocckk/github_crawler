@@ -10,3 +10,6 @@ __pycache__/
 *.log
 
 result.json
+
+# virtualenvs
+.idea/

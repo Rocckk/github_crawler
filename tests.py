@@ -8,10 +8,10 @@ from github_crawler import get_extra, get_input, get_urls, main, parse_repo, wri
 class TestCrawlerWikis(unittest.TestCase):
     def setUp(self):
         self.keywords = ["python", "redis", "django"]
-        self.proxies = ['154.41.2.154:13538', '103.93.53.144:8118']
+        self.proxies = ['91.193.253.188:23500', '36.66.61.7:56232']
         self.proxy_list = [
-            {'http': 'http://154.41.2.154:13538', 'https': 'https://154.41.2.154:13538'},
-            {'http': 'http://103.93.53.144:8118', 'https': 'https://103.93.53.144:8118'}
+            {'http': 'http://91.193.253.188:23500', 'https': 'https://91.193.253.188:23500'},
+            {'http': 'http://36.66.61.7:56232', 'https': 'https://36.66.61.7:56232'}
         ]
         self.obj_type = "Wikis"
         self.urls = get_urls(self.keywords, self.proxy_list, self.obj_type)
@@ -73,10 +73,10 @@ class TestCrawlerWikis(unittest.TestCase):
 class TestCrawlerRepos(unittest.TestCase):
     def setUp(self):
         self.keywords = ["python", "redis", "django"]
-        self.proxies = ['154.41.2.154:13538', '103.93.53.144:8118']
+        self.proxies = ['91.193.253.188:23500', '36.66.61.7:56232']
         self.proxy_list = [
-            {'http': 'http://154.41.2.154:13538', 'https': 'https://154.41.2.154:13538'},
-            {'http': 'http://103.93.53.144:8118', 'https': 'https://103.93.53.144:8118'}
+            {'http': 'http://91.193.253.188:23500', 'https': 'https://91.193.253.188:23500'},
+            {'http': 'http://36.66.61.7:56232', 'https': 'https://36.66.61.7:56232'}
         ]
         self.obj_type = "Repositories"
         self.urls = get_urls(self.keywords, self.proxy_list, self.obj_type)
@@ -188,10 +188,10 @@ class TestCrawlerRepos(unittest.TestCase):
 class TestCrawlerIssues(unittest.TestCase):
     def setUp(self):
         self.keywords = ["python", "redis", "django"]
-        self.proxies = ['154.41.2.154:13538', '103.93.53.144:8118']
+        self.proxies = ['91.193.253.188:23500', '36.66.61.7:56232']
         self.proxy_list = [
-            {'http': 'http://154.41.2.154:13538', 'https': 'https://154.41.2.154:13538'},
-            {'http': 'http://103.93.53.144:8118', 'https': 'https://103.93.53.144:8118'}
+            {'http': 'http://91.193.253.188:23500', 'https': 'https://91.193.253.188:23500'},
+            {'http': 'http://36.66.61.7:56232', 'https': 'https://36.66.61.7:56232'}
         ]
         self.obj_type = "Issues"
         self.urls = get_urls(self.keywords, self.proxy_list, self.obj_type)

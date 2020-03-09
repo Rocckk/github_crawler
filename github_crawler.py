@@ -48,7 +48,13 @@ from lxml.html import fromstring
 
 import requests
 
-OBJECT_TYPES = ['Repositories', 'Issues', 'Wikis']
+OBJECT_TYPES = {
+    'Repositories': 'https://github.com/search?utf8=%E2%9C%93&q=topic%3A{}+topic%3A{}+topic%3A{}&\
+ref=simplesearch',
+    'Issues': 'https://github.com/search?q={}+{}+{}+type%3Aissue',
+    'Wikis': 'https://github.com/search?q={}+{}+{}&type=Wikis'
+}
+THREAD_NUM = 8
 
 
 def get_input(content):
@@ -99,23 +105,14 @@ def get_urls(keywords, proxies, obj_type):
     """
     This function retrieves URLs matching search keywords passsed as the input
     :param keywords: list, the list of keywords to search for
-    :param proxies: list, list of dicts where key is the schema and value is the actual URL of a proxy
-    {'https': 'https://81.33.4.214:61711', 'http': 'http://185.176.32.160:3128'}
+    :param proxies: list, list of dicts where key is the schema and value is the actual URL of a
+    proxy {'https': 'https://81.33.4.214:61711', 'http': 'http://185.176.32.160:3128'}
     :param obj_type: string, the type of Github section to search through
     :return: list, list of dictionaries where key is always 'url' and value is the URL of the page
     which is suitable
     """
-    if obj_type == OBJECT_TYPES[0]:
-        github_url = 'https://github.com/search?utf8=%E2%9C%93&q=topic%3A{}+topic%3A{}+topic%3A{}&\
-ref=simplesearch'.format(keywords[0], keywords[1], keywords[2])
-    elif obj_type == OBJECT_TYPES[1]:
-        github_url = 'https://github.com/search?q={}+{}+{}+type%3Aissue'.format(
-            keywords[0], keywords[1], keywords[2]
-        )
-    elif obj_type == OBJECT_TYPES[2]:
-        github_url = 'https://github.com/search?q={}+{}+{}&type=Wikis'.format(
-            keywords[0], keywords[1], keywords[2]
-        )
+    url = OBJECT_TYPES.get(obj_type)
+    github_url = url.format(keywords[0], keywords[1], keywords[2])
     for i in enumerate(proxies):
         try:
             r = requests.get(url=github_url, proxies=proxies[i[0]])
@@ -137,17 +134,19 @@ def get_extra(urls, obj_type, proxies):
     returns the structured result containing the URL, owner and language stats for this URL
     :param urls: list, the array of dicts of URLs of Github repos
     :param obj_type: string, the type of Github section to search through
-    :param proxies: list, list of dicts here key is the schema and value is the actual URL of a proxy
-    {'https': 'https://81.33.4.214:61711', 'http': 'http://185.176.32.160:3128'}
+    :param proxies: list, list of dicts here key is the schema and value is the actual URL of a
+    proxy {'https': 'https://81.33.4.214:61711', 'http': 'http://185.176.32.160:3128'}
     :return: list, the list of dicts containing the URL of the page, the owner of the repo and
     repo's language statistics
     """
-    if obj_type == OBJECT_TYPES[0]:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=len(urls)) as executor:
+    if obj_type == 'Repositories':
+        with concurrent.futures.ThreadPoolExecutor(max_workers=THREAD_NUM) as executor:
             for i in enumerate(proxies):
                 try:
                     future_to_url = {
-                        executor.submit(parse_repo, url.get('url'), proxies[i[0]]): url.get('url') for url in urls
+                        executor.submit(
+                            parse_repo, url.get('url'), proxies[i[0]]
+                        ): url.get('url') for url in urls
                     }
                 except requests.exceptions.ProxyError:
                     pass
